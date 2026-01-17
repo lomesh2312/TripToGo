@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { MapPin, Calendar, DollarSign, Users, Sparkles, Loader, User, UsersRound, Heart } from 'lucide-react';
 import { TripFormData } from '../types';
+import { API_BASE_URL } from '../config';
 
 interface LocationSuggestion {
   place_id: number;
@@ -48,7 +49,7 @@ export const PlanTripPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/trips/generate`, {
+      const response = await fetch(`${API_BASE_URL}/api/trips/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +100,7 @@ export const PlanTripPage = () => {
               Perfect Trip
             </span>
           </h1>
-          <p className="text-xl text-gray-600">Tell us about your dream destination and let AI create magic</p>
+          <p className="text-xl text-gray-600">Tell us about your dream destination and let our engine build your itinerary</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12">

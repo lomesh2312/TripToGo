@@ -21,11 +21,11 @@ export const LandingPage = () => {
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in">
             Plan Your Dream Trip with{' '}
             <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-              AI Magic
+              Smart Planning
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-100 mb-8 max-w-3xl mx-auto">
-            Discover personalized travel itineraries crafted by AI. Your perfect adventure awaits!
+            Experience the future of travel with personalized itineraries designed just for you. Your next adventure is one click away!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

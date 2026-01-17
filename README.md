@@ -1,6 +1,6 @@
-# 🌍 TripToGo - AI Trip Planner
+# 🌍 TripToGo - Personalized Travel Itinerary Planner
 
-**TripToGo** is a modern, AI-powered travel planning application that helps users create personalized 3-day itineraries for any destination in the world. Using the power of Google's Gemini AI, the app generates tailor-made travel plans including landmarks, accommodations, and local culinary highlights.
+**TripToGo** is a modern travel planning application designed to help users create highly personalized 3-day itineraries for any destination. By leveraging advanced data processing, the app generates detailed travel plans including local landmarks, curated accommodations, and authentic culinary highlights.
 
 ## 🚀 Live Demo
 - **Frontend**: [https://triptogo-frontend.vercel.app](https://triptogo-frontend.vercel.app)
