@@ -1,7 +1,8 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Trip, LandmarkOption, HostelOption, RestaurantOption, DishOption } from '../types';
-import { MapPin, Calendar, DollarSign, Users, Clock, Utensils, Home, Backpack, Lightbulb, Loader } from 'lucide-react';
+import { MapPin, Calendar, DollarSign, Users, Clock, Utensils, Home, Backpack, Lightbulb, Loader, ArrowUpRight } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 
 export const TripDetailsPage = () => {
@@ -37,10 +38,10 @@ export const TripDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-cream-200 flex items-center justify-center">
         <div className="text-center">
-          <Loader className="h-12 w-12 animate-spin text-cyan-600 mx-auto mb-4" />
-          <p className="text-xl text-gray-600">Loading your trip...</p>
+          <Loader className="h-10 w-10 animate-spin text-forest-500 mx-auto mb-4" />
+          <p className="text-olive-500 text-sm">Loading your trip…</p>
         </div>
       </div>
     );
@@ -48,11 +49,11 @@ export const TripDetailsPage = () => {
 
   if (error || !trip) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 flex items-center justify-center">
+      <div className="min-h-screen bg-cream-200 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-xl text-red-600 mb-4">{error || 'Trip not found'}</p>
-          <Link to="/plan" className="text-cyan-600 hover:text-cyan-700">
-            ← Plan a New Trip
+          <p className="text-red-600 mb-4 text-sm">{error || 'Trip not found'}</p>
+          <Link to="/plan" className="text-forest-500 hover:text-forest-600 text-sm flex items-center gap-1 justify-center">
+            <span>← Plan a New Trip</span>
           </Link>
         </div>
       </div>
@@ -70,163 +71,134 @@ export const TripDetailsPage = () => {
   const tripPlan = trip.trip_plan;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden mb-8">
-          <div className="relative h-64 md:h-96">
+    <div className="min-h-screen bg-cream-200 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto">
+
+        {/* Hero card */}
+        <div className="bg-cream-100 border border-cream-400 rounded-sm overflow-hidden mb-8 shadow-sm">
+          <div className="relative h-56 md:h-80">
             <img
               src={getImageUrl(trip.destination, 'landscape')}
               alt={trip.destination}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
-              <div className="flex items-center space-x-2 text-cyan-400 mb-2">
-                <MapPin className="h-5 w-5" />
-                <span className="font-semibold tracking-wide uppercase">{trip.destination}</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-forest-700/80 via-forest-700/20 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+              <div className="flex items-center space-x-1.5 text-cream-300 mb-2 text-xs uppercase tracking-widest">
+                <MapPin className="h-3.5 w-3.5" />
+                <span>{trip.destination}</span>
               </div>
-              <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+              <h1 className="font-serif text-3xl md:text-5xl font-bold text-cream-100 mb-4 leading-tight">
                 {tripPlan?.trip_name || trip.destination}
               </h1>
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl text-white border border-white/20">
-                  <Calendar className="h-5 w-5 text-cyan-400" />
-                  <span className="font-medium">{trip.days} Days</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl text-white border border-white/20">
-                  <DollarSign className="h-5 w-5 text-green-400" />
-                  <span className="capitalize font-medium">{trip.budget}</span>
-                </div>
-                <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl text-white border border-white/20">
-                  <Users className="h-5 w-5 text-blue-400" />
-                  <span className="capitalize font-medium">{trip.travel_with}</span>
-                </div>
+              <div className="flex flex-wrap gap-3">
+                <Pill icon={<Calendar className="h-3.5 w-3.5" />} label={`${trip.days} Days`} />
+                <Pill icon={<DollarSign className="h-3.5 w-3.5" />} label={trip.budget} />
+                <Pill icon={<Users className="h-3.5 w-3.5" />} label={trip.travel_with} />
               </div>
             </div>
           </div>
 
-          <div className="p-8 md:p-12">
+          <div className="p-6 md:p-10">
+
+            {/* Overview */}
             {tripPlan?.overview && (
-              <div className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center space-x-3">
-                  <span className="w-2 h-8 bg-cyan-600 rounded-full"></span>
-                  <span>Trip Overview</span>
-                </h2>
-                <div className="bg-cyan-50/50 p-8 rounded-3xl border border-cyan-100">
-                  <p className="text-gray-700 text-xl leading-relaxed italic">
+              <Section label="Overview">
+                <div className="bg-cream-200 border border-cream-400 rounded-sm p-5">
+                  <p className="text-forest-700 leading-relaxed italic text-sm">
                     "{tripPlan.overview}"
                   </p>
                   {tripPlan?.bestTimeToVisit && (
-                    <div className="mt-6 flex items-center space-x-2 text-cyan-800 font-semibold">
-                      <Clock className="h-5 w-5" />
-                      <span>Best Time to Visit: {tripPlan.bestTimeToVisit}</span>
+                    <div className="mt-4 flex items-center space-x-2 text-forest-600 text-xs font-medium">
+                      <Clock className="h-4 w-4" />
+                      <span>Best Time: {tripPlan.bestTimeToVisit}</span>
                     </div>
                   )}
                 </div>
-              </div>
+              </Section>
             )}
 
-            {/* Landmarks & Must Visit Places */}
+            {/* Landmarks */}
             {tripPlan?.mustVisitPlaces && tripPlan.mustVisitPlaces.length > 0 && (
-              <div className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center space-x-3">
-                  <span className="w-2 h-8 bg-purple-600 rounded-full"></span>
-                  <span>Must-Visit Landmarks</span>
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <Section label="Must-Visit Landmarks">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {tripPlan.mustVisitPlaces.map((place: LandmarkOption, idx: number) => (
-                    <div key={idx} className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100">
-                      <div className="relative h-56 overflow-hidden">
+                    <div key={idx} className="group bg-cream-200 border border-cream-400 rounded-sm overflow-hidden hover:border-forest-300 transition-colors">
+                      <div className="h-44 overflow-hidden">
                         <img
                           src={getImageUrl(place.image_keyword || place.name, 'landmark')}
                           alt={place.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
-                        <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                          <h4 className="text-white font-bold text-xl">{place.name}</h4>
-                        </div>
                       </div>
-                      <div className="p-6">
-                        <p className="text-gray-600">{place.description}</p>
+                      <div className="p-4">
+                        <h4 className="font-serif font-bold text-forest-600 mb-1">{place.name}</h4>
+                        <p className="text-olive-500 text-xs leading-relaxed">{place.description}</p>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
+              </Section>
             )}
 
-            {/* Hostel Options */}
+            {/* Hostels */}
             {tripPlan?.hostelOptions && tripPlan.hostelOptions.length > 0 && (
-              <div className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center space-x-3">
-                  <span className="w-2 h-8 bg-blue-600 rounded-full"></span>
-                  <span>Recommended Hostels</span>
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <Section label="Recommended Stays">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {tripPlan.hostelOptions.map((hostel: HostelOption, idx: number) => (
-                    <div key={idx} className="flex bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow">
-                      <div className="w-1/3 min-h-[160px]">
+                    <div key={idx} className="flex bg-cream-200 border border-cream-400 rounded-sm overflow-hidden hover:border-forest-300 transition-colors">
+                      <div className="w-1/3 min-h-[140px]">
                         <img
                           src={getImageUrl(hostel.image_keyword || hostel.name, 'hostel')}
                           alt={hostel.name}
                           className="w-full h-full object-cover"
                         />
                       </div>
-                      <div className="p-6 w-2/3 flex flex-col justify-between">
+                      <div className="p-4 w-2/3 flex flex-col justify-between">
                         <div>
-                          <h4 className="font-bold text-xl text-gray-900 mb-1">{hostel.name}</h4>
-                          <p className="text-cyan-600 font-medium mb-3 flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" /> {hostel.location}
+                          <h4 className="font-serif font-bold text-forest-600 mb-1 text-sm">{hostel.name}</h4>
+                          <p className="text-forest-400 text-xs mb-2 flex items-center gap-1">
+                            <MapPin className="h-3 w-3" /> {hostel.location}
                           </p>
-                          <p className="text-gray-600 text-sm line-clamp-2">{hostel.description}</p>
+                          <p className="text-olive-500 text-xs line-clamp-2">{hostel.description}</p>
                         </div>
-                        <div className="mt-4 text-green-600 font-bold text-lg">
-                          {hostel.price}
-                        </div>
+                        <div className="mt-3 text-forest-500 font-semibold text-sm">{hostel.price}</div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
+              </Section>
             )}
 
-            {/* Must Try Dishes */}
+            {/* Dishes */}
             {tripPlan?.mustTryDishes && tripPlan.mustTryDishes.length > 0 && (
-              <div className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center space-x-3">
-                  <span className="w-2 h-8 bg-orange-600 rounded-full"></span>
-                  <span>Must-Try Local Food</span>
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <Section label="Must-Try Local Food">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
                   {tripPlan.mustTryDishes.map((dish: DishOption, idx: number) => (
                     <div key={idx} className="text-center group">
-                      <div className="relative aspect-square rounded-full overflow-hidden mb-4 border-4 border-white shadow-lg group-hover:border-orange-200 transition-colors">
+                      <div className="aspect-square rounded-sm overflow-hidden mb-3 border border-cream-400 group-hover:border-forest-300 transition-colors">
                         <img
                           src={getImageUrl(dish.image_keyword || dish.name, 'food')}
                           alt={dish.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
-                      <h4 className="font-bold text-gray-900">{dish.name}</h4>
-                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">{dish.description}</p>
+                      <h4 className="font-serif font-bold text-forest-600 text-sm">{dish.name}</h4>
+                      <p className="text-xs text-olive-400 mt-0.5 line-clamp-2">{dish.description}</p>
                     </div>
                   ))}
                 </div>
-              </div>
+              </Section>
             )}
 
-            {/* Famous Restaurants */}
+            {/* Restaurants */}
             {tripPlan?.famousRestaurants && tripPlan.famousRestaurants.length > 0 && (
-              <div className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center space-x-3">
-                  <span className="w-2 h-8 bg-red-600 rounded-full"></span>
-                  <span>Famous Restaurants</span>
-                </h2>
-                <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100">
-                  <div className="space-y-6">
+              <Section label="Famous Restaurants">
+                <div className="bg-cream-200 border border-cream-400 rounded-sm p-5">
+                  <div className="space-y-4">
                     {tripPlan.famousRestaurants.map((res: RestaurantOption, idx: number) => (
-                      <div key={idx} className="flex items-start space-x-4 p-4 bg-white rounded-2xl shadow-sm">
-                        <div className="h-16 w-16 rounded-xl overflow-hidden flex-shrink-0">
+                      <div key={idx} className="flex items-start space-x-3 p-3 bg-cream-100 border border-cream-400 rounded-sm">
+                        <div className="h-14 w-14 rounded-sm overflow-hidden flex-shrink-0">
                           <img
                             src={getImageUrl(res.image_keyword || res.name, 'restaurant')}
                             alt={res.name}
@@ -234,80 +206,72 @@ export const TripDetailsPage = () => {
                           />
                         </div>
                         <div>
-                          <h4 className="font-bold text-gray-900">{res.name}</h4>
-                          <p className="text-sm font-semibold text-orange-600 mb-1">{res.specialty}</p>
-                          <p className="text-sm text-gray-600">{res.description}</p>
+                          <h4 className="font-serif font-bold text-forest-600 text-sm">{res.name}</h4>
+                          <p className="text-forest-400 text-xs font-medium mb-1">{res.specialty}</p>
+                          <p className="text-olive-500 text-xs">{res.description}</p>
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              </div>
+              </Section>
             )}
 
+            {/* Daily Itinerary */}
             {tripPlan?.dailyItinerary && tripPlan.dailyItinerary.length > 0 && (
-              <div className="mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center space-x-3">
-                  <span className="w-2 h-8 bg-cyan-600 rounded-full"></span>
-                  <span>Adventure Timeline</span>
-                </h2>
-                <div className="space-y-12">
+              <Section label="Day-by-Day Itinerary">
+                <div className="space-y-6">
                   {tripPlan.dailyItinerary.map((day) => (
-                    <div key={day.day} className="relative pl-12 border-l-2 border-dashed border-cyan-200 ml-4 pb-4">
-                      <div className="absolute -left-7 top-0 bg-gradient-to-br from-cyan-500 to-blue-600 text-white w-14 h-14 rounded-3xl flex items-center justify-center font-black text-xl shadow-lg shadow-cyan-200 rotate-12 group-hover:rotate-0 transition-transform">
+                    <div key={day.day} className="relative pl-10 border-l-2 border-cream-400 ml-4 pb-2">
+                      <div className="absolute -left-5 top-0 bg-forest-500 text-cream-100 w-10 h-10 rounded-sm flex items-center justify-center font-bold font-serif shadow-md text-sm">
                         D{day.day}
                       </div>
-                      <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 hover:border-cyan-200 transition-colors">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-6">{day.title}</h3>
-
-                        <div className="space-y-6">
+                      <div className="bg-cream-100 border border-cream-400 rounded-sm p-5 hover:border-forest-300 transition-colors">
+                        <h3 className="font-serif text-lg font-bold text-forest-600 mb-4">{day.title}</h3>
+                        <div className="space-y-4">
                           {day.activities.map((activity, idx) => (
-                            <div key={idx} className="group relative">
-                              <div className="flex items-start space-x-4">
-                                <div className="text-cyan-600 font-bold text-sm pt-1 w-20 flex-shrink-0">
-                                  {activity.time}
-                                </div>
-                                <div className="flex-1 pb-6 border-b border-gray-50 group-last:border-0 group-last:pb-0">
-                                  <div className="flex justify-between items-start mb-2">
-                                    <h4 className="font-bold text-gray-900 text-lg group-hover:text-cyan-600 transition-colors">
-                                      {activity.activity}
-                                    </h4>
-                                    {activity.estimatedCost && (
-                                      <span className="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                        {activity.estimatedCost}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <p className="text-gray-600 leading-relaxed mb-3">{activity.description}</p>
-                                  {activity.duration && (
-                                    <div className="flex items-center text-sm text-gray-400">
-                                      <Clock className="h-4 w-4 mr-1 text-gray-300" />
-                                      <span>{activity.duration}</span>
-                                    </div>
+                            <div key={idx} className="flex items-start space-x-3 pb-4 border-b border-cream-300 last:border-0 last:pb-0">
+                              <div className="text-forest-400 font-medium text-xs pt-0.5 w-16 flex-shrink-0 font-mono">
+                                {activity.time}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex justify-between items-start mb-1">
+                                  <h4 className="font-semibold text-forest-700 text-sm">{activity.activity}</h4>
+                                  {activity.estimatedCost && (
+                                    <span className="bg-forest-100 text-forest-600 text-xs font-medium px-2 py-0.5 rounded-sm ml-2 flex-shrink-0">
+                                      {activity.estimatedCost}
+                                    </span>
                                   )}
                                 </div>
+                                <p className="text-olive-500 text-xs leading-relaxed">{activity.description}</p>
+                                {activity.duration && (
+                                  <div className="flex items-center text-xs text-olive-400 mt-1.5 gap-1">
+                                    <Clock className="h-3 w-3" />
+                                    <span>{activity.duration}</span>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))}
                         </div>
 
                         {(day.meals || day.accommodation) && (
-                          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {day.meals && (
-                              <div className="bg-orange-50/50 p-4 rounded-2xl flex items-center space-x-3">
-                                <Utensils className="h-5 w-5 text-orange-600 flex-shrink-0" />
-                                <div className="text-sm">
-                                  <span className="font-bold text-orange-900 block">Meals</span>
-                                  <span className="text-orange-800 line-clamp-1">{day.meals}</span>
+                              <div className="bg-cream-200 border border-cream-400 p-3 rounded-sm flex items-center space-x-2">
+                                <Utensils className="h-4 w-4 text-forest-400 flex-shrink-0" />
+                                <div className="text-xs">
+                                  <span className="font-semibold text-forest-600 block">Meals</span>
+                                  <span className="text-olive-500 line-clamp-1">{day.meals}</span>
                                 </div>
                               </div>
                             )}
                             {day.accommodation && (
-                              <div className="bg-blue-50/50 p-4 rounded-2xl flex items-center space-x-3">
-                                <Home className="h-5 w-5 text-blue-600 flex-shrink-0" />
-                                <div className="text-sm">
-                                  <span className="font-bold text-blue-900 block">Stay</span>
-                                  <span className="text-blue-800 line-clamp-1">{day.accommodation}</span>
+                              <div className="bg-cream-200 border border-cream-400 p-3 rounded-sm flex items-center space-x-2">
+                                <Home className="h-4 w-4 text-forest-400 flex-shrink-0" />
+                                <div className="text-xs">
+                                  <span className="font-semibold text-forest-600 block">Stay</span>
+                                  <span className="text-olive-500 line-clamp-1">{day.accommodation}</span>
                                 </div>
                               </div>
                             )}
@@ -317,21 +281,22 @@ export const TripDetailsPage = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Section>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {/* Packing + Tips */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {tripPlan?.packingList && (
-                <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-8 rounded-3xl border border-blue-100 shadow-sm">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center space-x-3">
-                    <Backpack className="h-7 w-7 text-indigo-600" />
-                    <span>Adventure Pack</span>
+                <div className="bg-cream-200 border border-cream-400 rounded-sm p-5">
+                  <h3 className="font-serif text-lg font-bold text-forest-600 mb-4 flex items-center gap-2">
+                    <Backpack className="h-5 w-5 text-forest-400" />
+                    <span>Packing List</span>
                   </h3>
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="space-y-2">
                     {tripPlan.packingList.map((item, idx) => (
-                      <div key={idx} className="flex items-center space-x-3 bg-white/60 p-3 rounded-xl">
-                        <div className="h-2 w-2 bg-indigo-500 rounded-full"></div>
-                        <span className="text-gray-700 font-medium">{item}</span>
+                      <div key={idx} className="flex items-center space-x-2 text-sm">
+                        <div className="h-1.5 w-1.5 bg-forest-400 rounded-full" />
+                        <span className="text-forest-700">{item}</span>
                       </div>
                     ))}
                   </div>
@@ -339,16 +304,16 @@ export const TripDetailsPage = () => {
               )}
 
               {tripPlan?.travelTips && (
-                <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-8 rounded-3xl border border-emerald-100 shadow-sm">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center space-x-3">
-                    <Lightbulb className="h-7 w-7 text-emerald-600" />
+                <div className="bg-cream-200 border border-cream-400 rounded-sm p-5">
+                  <h3 className="font-serif text-lg font-bold text-forest-600 mb-4 flex items-center gap-2">
+                    <Lightbulb className="h-5 w-5 text-forest-400" />
                     <span>Insider Tips</span>
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {tripPlan.travelTips.map((tip, idx) => (
-                      <div key={idx} className="flex items-start space-x-3">
-                        <span className="text-xl leading-none">✨</span>
-                        <p className="text-emerald-900 font-medium">{tip}</p>
+                      <div key={idx} className="flex items-start space-x-2 text-sm">
+                        <span className="text-forest-400 mt-0.5">→</span>
+                        <p className="text-olive-600">{tip}</p>
                       </div>
                     ))}
                   </div>
@@ -356,20 +321,46 @@ export const TripDetailsPage = () => {
               )}
             </div>
 
+            {/* Total Cost */}
             {tripPlan?.estimatedTotalCost && (
-              <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-10 rounded-3xl text-center shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-cyan-500/10 rounded-full -ml-12 -mb-12"></div>
-                <p className="text-cyan-400 font-bold uppercase tracking-widest text-sm mb-3">Investment in Memories</p>
-                <p className="text-5xl font-black mb-2">{tripPlan.estimatedTotalCost}</p>
-                <p className="text-gray-400 text-sm">Estimated total based on your preferences</p>
+              <div className="bg-forest-600 text-cream-100 p-8 rounded-sm text-center">
+                <p className="text-forest-300 text-xs font-medium uppercase tracking-widest mb-2">Estimated Total Investment</p>
+                <p className="font-serif text-5xl font-bold mb-1">{tripPlan.estimatedTotalCost}</p>
+                <p className="text-forest-300 text-xs">Based on your preferences and selections</p>
               </div>
             )}
+
+            <div className="mt-8 flex justify-center">
+              <Link
+                to="/plan"
+                className="flex items-center space-x-2 bg-forest-500 text-cream-100 px-6 py-3 text-sm font-medium hover:bg-forest-400 transition-colors rounded-sm"
+              >
+                <span>Plan Another Trip</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+const Pill = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
+  <div className="flex items-center space-x-1.5 bg-cream-100/20 backdrop-blur-sm px-4 py-2 rounded-sm text-cream-100 border border-cream-100/20 text-xs capitalize">
+    {icon}
+    <span>{label}</span>
+  </div>
+);
+
+const Section = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div className="mb-10">
+    <div className="flex items-center gap-3 mb-5">
+      <span className="w-1 h-6 bg-forest-500 rounded-full inline-block" />
+      <h2 className="font-serif text-2xl font-bold text-forest-600">{label}</h2>
+    </div>
+    {children}
+  </div>
+);
 
 export default TripDetailsPage;

@@ -9,7 +9,7 @@ import { TripDetailsPage } from './pages/TripDetailsPage';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cream-200">
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -23,7 +23,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/trip/:id"
           element={
