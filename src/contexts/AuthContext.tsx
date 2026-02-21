@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const init = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
         setLoading(false);
@@ -30,44 +30,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
+        if (res.ok) {
+          setUser(await res.json());
         } else {
           localStorage.removeItem('token');
         }
-      } catch (error) {
-        console.error('Failed to fetch user', error);
+      } catch (e) {
         localStorage.removeItem('token');
       } finally {
         setLoading(false);
       }
     };
-
-    fetchUser();
+    init();
   }, []);
 
   const signUp = async (email: string, password: string, name: string = '') => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        return { error: new Error(data.error || 'Registration failed') };
-      }
+      const data = await res.json();
+      if (!res.ok) return { error: new Error(data.error || 'Failed') };
 
       localStorage.setItem('token', data.token);
       setUser({ _id: data._id, name: data.name, email: data.email });
@@ -79,19 +69,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        return { error: new Error(data.error || 'Login failed') };
-      }
+      const data = await res.json();
+      if (!res.ok) return { error: new Error(data.error || 'Failed') };
 
       localStorage.setItem('token', data.token);
       setUser({ _id: data._id, name: data.name, email: data.email });
@@ -114,9 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('Auth wrap required');
+  return ctx;
 };

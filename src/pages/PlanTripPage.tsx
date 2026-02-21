@@ -39,7 +39,7 @@ export const PlanTripPage = () => {
       setSuggestions(data);
       setShowSuggestions(true);
     } catch (err) {
-      console.error('Error fetching suggestions:', err);
+      console.error(err);
     }
   };
 
@@ -64,28 +64,21 @@ export const PlanTripPage = () => {
               (formData.travelerCount || 4),
           travelWith: formData.travelWith,
           interests: 'general tourism',
-          userId: user?.id,
+          userId: user?._id,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate trip');
+        throw new Error(data.error || 'Failed to generate');
       }
 
       if (data.tripId) {
         navigate(`/trip/${data.tripId}`);
-      } else {
-        throw new Error('No trip ID returned from server');
       }
-
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
+    } catch (err: any) {
+      setError(err.message || 'Error occurred');
     } finally {
       setLoading(false);
     }
@@ -94,7 +87,6 @@ export const PlanTripPage = () => {
   return (
     <div className="min-h-screen bg-cream-200 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-
         <div className="mb-10">
           <p className="text-[10px] font-medium tracking-[0.2em] text-olive-400 uppercase mb-2 flex items-center gap-2">
             <span className="w-4 h-px bg-olive-400 inline-block" />
@@ -104,7 +96,7 @@ export const PlanTripPage = () => {
             Design Your<br />Perfect Trip
           </h1>
           <p className="text-olive-500 text-sm leading-relaxed max-w-md">
-            Tell us about your dream destination and let our AI engine build a bespoke itinerary for you.
+            Tell us about your dream destination and let our engine build a bespoke itinerary for you.
           </p>
         </div>
 
@@ -116,11 +108,10 @@ export const PlanTripPage = () => {
               </div>
             )}
 
-            {/* Destination */}
             <div className="space-y-2 relative">
               <label className="flex items-center space-x-2 text-xs font-medium text-olive-600 uppercase tracking-wide">
                 <MapPin className="h-4 w-4 text-forest-400" />
-                <span>Where do you want to go?</span>
+                <span>Destination</span>
               </label>
               <input
                 type="text"
@@ -134,7 +125,7 @@ export const PlanTripPage = () => {
                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                 onFocus={() => formData.destination.length >= 3 && setShowSuggestions(true)}
                 className="w-full px-4 py-3 border border-cream-400 rounded-sm bg-cream-50 text-forest-700 text-sm focus:ring-1 focus:ring-forest-400 focus:border-forest-400 transition-all placeholder:text-olive-300"
-                placeholder="e.g., Paris, Tokyo, Santorini…"
+                placeholder="Where to?"
               />
               {showSuggestions && suggestions.length > 0 && (
                 <div className="absolute z-10 w-full bg-cream-100 mt-1 border border-cream-400 rounded-sm shadow-lg max-h-60 overflow-auto">
@@ -155,11 +146,10 @@ export const PlanTripPage = () => {
               )}
             </div>
 
-            {/* Days */}
             <div className="space-y-3">
               <label className="flex items-center space-x-2 text-xs font-medium text-olive-600 uppercase tracking-wide">
                 <Calendar className="h-4 w-4 text-forest-400" />
-                <span>How many days?</span>
+                <span>Duration (Days)</span>
               </label>
               <div className="flex items-center space-x-4">
                 <input
@@ -176,39 +166,37 @@ export const PlanTripPage = () => {
               </div>
             </div>
 
-            {/* Budget */}
             <div className="space-y-3">
               <label className="flex items-center space-x-2 text-xs font-medium text-olive-600 uppercase tracking-wide">
                 <DollarSign className="h-4 w-4 text-forest-400" />
-                <span>What's your budget?</span>
+                <span>Budget</span>
               </label>
               <div className="grid grid-cols-3 gap-3">
                 <BudgetOption
                   selected={formData.budget === 'cheap'}
                   onClick={() => setFormData({ ...formData, budget: 'cheap' })}
-                  title="Budget"
-                  description="Save while exploring"
+                  title="Cheap"
+                  description="Budget friendly"
                 />
                 <BudgetOption
                   selected={formData.budget === 'moderate'}
                   onClick={() => setFormData({ ...formData, budget: 'moderate' })}
                   title="Moderate"
-                  description="Balanced comfort & cost"
+                  description="Standard"
                 />
                 <BudgetOption
                   selected={formData.budget === 'luxury'}
                   onClick={() => setFormData({ ...formData, budget: 'luxury' })}
                   title="Luxury"
-                  description="Premium experiences"
+                  description="Premium"
                 />
               </div>
             </div>
 
-            {/* Travel With */}
             <div className="space-y-3">
               <label className="flex items-center space-x-2 text-xs font-medium text-olive-600 uppercase tracking-wide">
                 <Users className="h-4 w-4 text-forest-400" />
-                <span>Who are you traveling with?</span>
+                <span>Travelers</span>
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <TravelOption
@@ -240,7 +228,7 @@ export const PlanTripPage = () => {
               {(formData.travelWith === 'family' || formData.travelWith === 'friends') && (
                 <div className="mt-3 p-4 bg-cream-200 border border-cream-400 rounded-sm">
                   <label className="block text-xs font-medium text-olive-600 mb-2 uppercase tracking-wide">
-                    Number of travelers:
+                    Count:
                   </label>
                   <input
                     type="number"
@@ -257,12 +245,12 @@ export const PlanTripPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-forest-500 text-cream-100 py-4 px-8 rounded-sm text-sm font-semibold hover:bg-forest-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-forest-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="w-full bg-forest-500 text-cream-100 py-4 px-8 rounded-sm text-sm font-semibold hover:bg-forest-400 transition-colors disabled:opacity-50 flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <>
                   <Loader className="h-5 w-5 animate-spin" />
-                  <span>Generating Your Perfect Trip…</span>
+                  <span>Processing...</span>
                 </>
               ) : (
                 <>

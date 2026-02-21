@@ -5,19 +5,14 @@ const createTrip = async (req, res) => {
     try {
         const tripDetails = req.body;
 
-        // Basic validation
         if (!tripDetails.location || !tripDetails.days) {
             return res.status(400).json({ error: 'Location and days are required' });
         }
 
-        console.log("Generating trip for:", tripDetails);
-
-        // Call Gemini API
         const tripPlan = await generateTripPlan(tripDetails);
 
-        // Save to MongoDB
         const trip = new Trip({
-            user: req.user._id, // Assuming protected route sets req.user
+            user: req.user._id,
             destination: tripDetails.location,
             days: tripDetails.days,
             budget: tripDetails.budget || 'standard',
@@ -27,12 +22,11 @@ const createTrip = async (req, res) => {
         });
 
         const createdTrip = await trip.save();
-
         res.status(201).json({ success: true, tripId: createdTrip._id, plan: tripPlan });
 
     } catch (error) {
-        console.error("Controller Error:", error);
-        res.status(500).json({ error: 'Failed to generate trip plan', details: error.message });
+        console.error("Trip creation failure:", error);
+        res.status(500).json({ error: 'Request failed', details: error.message });
     }
 };
 
@@ -42,31 +36,22 @@ const getTripById = async (req, res) => {
         const trip = await Trip.findById(id);
 
         if (!trip) {
-            return res.status(404).json({ error: 'Trip not found' });
+            return res.status(404).json({ error: 'Not found' });
         }
 
-        // Return data ensuring ID is properly formatted strings usually expected by frontend
         res.json({ id: trip._id, ...trip._doc });
     } catch (error) {
-        console.error("Error fetching trip:", error);
-        res.status(500).json({ error: 'Failed to fetch trip' });
+        res.status(500).json({ error: 'Fetch failed' });
     }
 };
 
 const getUserTrips = async (req, res) => {
     try {
-        // Only return trips belonging to the authenticated user
         const trips = await Trip.find({ user: req.user._id }).sort({ createdAt: -1 });
-
-        const formattedTrips = trips.map(trip => ({
-            id: trip._id,
-            ...trip._doc
-        }));
-
-        res.json(formattedTrips);
+        const formatted = trips.map(t => ({ id: t._id, ...t._doc }));
+        res.json(formatted);
     } catch (error) {
-        console.error("Error fetching user trips:", error);
-        res.status(500).json({ error: 'Failed to fetch user trips' });
+        res.status(500).json({ error: 'Fetch failed' });
     }
 };
 

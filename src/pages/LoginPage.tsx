@@ -16,10 +16,10 @@ export const LoginPage = () => {
     setError('');
     setLoading(true);
 
-    const { error } = await signIn(email, password);
+    const { error: err } = await signIn(email, password);
 
-    if (error) {
-      setError(error.message);
+    if (err) {
+      setError(err.message);
       setLoading(false);
     } else {
       navigate('/plan');
@@ -31,7 +31,6 @@ export const LoginPage = () => {
       <div className="absolute inset-0 overflow-hidden">
         <img
           src="https://images.pexels.com/photos/2356059/pexels-photo-2356059.jpeg"
-          alt="Travel background"
           className="w-full h-full object-cover opacity-10"
         />
       </div>
@@ -55,15 +54,14 @@ export const LoginPage = () => {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-xs font-medium text-olive-600 mb-1.5 uppercase tracking-wide">
-                Email Address
+              <label className="block text-xs font-medium text-olive-600 mb-1.5 uppercase tracking-wide">
+                Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Mail className="h-4 w-4 text-olive-400" />
                 </div>
                 <input
-                  id="email"
                   type="email"
                   required
                   value={email}
@@ -75,7 +73,7 @@ export const LoginPage = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-xs font-medium text-olive-600 mb-1.5 uppercase tracking-wide">
+              <label className="block text-xs font-medium text-olive-600 mb-1.5 uppercase tracking-wide">
                 Password
               </label>
               <div className="relative">
@@ -83,7 +81,6 @@ export const LoginPage = () => {
                   <Lock className="h-4 w-4 text-olive-400" />
                 </div>
                 <input
-                  id="password"
                   type="password"
                   required
                   value={password}
@@ -97,9 +94,9 @@ export const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-forest-500 text-cream-100 py-3 px-4 rounded-sm text-sm font-medium hover:bg-forest-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-forest-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-forest-500 text-cream-100 py-3 px-4 rounded-sm text-sm font-medium hover:bg-forest-400 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Signing In…' : 'Sign In'}
+              {loading ? 'Processing...' : 'Sign In'}
             </button>
           </form>
 
@@ -108,21 +105,21 @@ export const LoginPage = () => {
               <div className="w-full border-t border-cream-400" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="px-2 bg-cream-100 text-olive-400">New to TripToGo?</span>
+              <span className="px-2 bg-cream-100 text-olive-400">New?</span>
             </div>
           </div>
 
           <Link
             to="/signup"
-            className="block w-full text-center bg-cream-200 text-forest-600 py-2.5 px-4 rounded-sm text-sm font-medium hover:bg-cream-300 transition-colors duration-200 border border-cream-400"
+            className="block w-full text-center bg-cream-200 text-forest-600 py-2.5 px-4 rounded-sm text-sm font-medium hover:bg-cream-300 transition-colors border border-cream-400"
           >
-            Create an Account
+            Create Account
           </Link>
         </div>
 
         <p className="mt-5 text-center text-xs text-olive-400">
-          <Link to="/" className="text-forest-500 hover:text-forest-600 font-medium">
-            ← Back to Home
+          <Link to="/" className="text-forest-500 hover:underline">
+            ← Home
           </Link>
         </p>
       </div>

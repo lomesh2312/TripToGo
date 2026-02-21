@@ -1,5 +1,11 @@
-const { genAI } = require('../config/gemini');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+const apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey) {
+  console.warn('GEMINI_API_KEY is missing');
+}
+
+const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 const generateTripPlan = async (tripDetails) => {
@@ -9,7 +15,7 @@ const generateTripPlan = async (tripDetails) => {
     Generate a detailed ${days}-day trip plan for ${travelers} people to ${location} with a ${budget} budget.
     Interests: ${interests}.
     
-    Please provide the response in valid JSON format with the following structure:
+    Please provide the response in valid JSON format:
     {
       "trip_name": "Name of the trip",
       "destination": "${location}",
@@ -23,7 +29,7 @@ const generateTripPlan = async (tripDetails) => {
           "price": "Price per night",
           "location": "Address or area",
           "description": "Brief description",
-          "image_keyword": "highly descriptive keyword for searching images of this specific hostel interior or exterior"
+          "image_keyword": "keyword for searching images"
         }
       ],
       "famousRestaurants": [
@@ -32,21 +38,21 @@ const generateTripPlan = async (tripDetails) => {
           "specialty": "Main dish or style",
           "location": "Address or area",
           "description": "Why it is famous",
-          "image_keyword": "highly descriptive keyword for searching images of this restaurant or its signature dish"
+          "image_keyword": "keyword for searching images"
         }
       ],
       "mustVisitPlaces": [
         {
           "name": "Place Name",
-          "description": "Brief description of the landmark or place",
-          "image_keyword": "highly descriptive keyword including the destination name for searching images of this place (e.g., 'Eiffel Tower Paris')"
+          "description": "Brief description of the landmark",
+          "image_keyword": "keyword for images"
         }
       ],
       "mustTryDishes": [
         {
           "name": "Dish Name",
           "description": "What it is",
-          "image_keyword": "highly descriptive keyword for searching high-quality images of this specific local dish"
+          "image_keyword": "keyword for images"
         }
       ],
       "dailyItinerary": [
@@ -55,23 +61,23 @@ const generateTripPlan = async (tripDetails) => {
           "title": "Theme of the day",
           "activities": [
             {
-              "time": "Time (e.g., 9:00 AM)",
+              "time": "9:00 AM",
               "activity": "Activity title",
               "description": "Brief description",
               "duration": "Duration",
-              "estimatedCost": "Estimated cost"
+              "estimatedCost": "Cost"
             }
           ],
-          "meals": "Suggestions for breakfast, lunch, and dinner",
-          "accommodation": "Suggested style"
+          "meals": "Food suggestions",
+          "accommodation": "Stay suggestion"
         }
       ],
-      "packingList": ["Item 1", "Item 2"],
-      "travelTips": ["Tip 1", "Tip 2"],
-      "estimatedTotalCost": "Total estimated cost"
+      "packingList": [],
+      "travelTips": [],
+      "estimatedTotalCost": "Total cost"
     }
     
-    Do not include markdown formatting (like \`\`\`json) in the response, just the raw JSON string.
+    Do not include markdown formatting.
   `;
 
   try {
@@ -79,13 +85,11 @@ const generateTripPlan = async (tripDetails) => {
     const response = await result.response;
     const text = response.text();
 
-    // Clean up if markdown block quotes are present
     const cleanedText = text.replace(/```json/g, '').replace(/```/g, '').trim();
-
     return JSON.parse(cleanedText);
   } catch (error) {
-    console.error("Error generating trip:", error);
-    throw new Error(error.message || "Failed to generate trip plan");
+    console.error("Gemini Error:", error);
+    throw new Error(error.message || "Failed to generate plan");
   }
 };
 

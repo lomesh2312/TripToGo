@@ -1,60 +1,31 @@
-# 🌍 TripToGo - Personalized Travel Itinerary Planner
+# 🌍 TripToGo
 
-**TripToGo** is a modern travel planning application designed to help users create highly personalized 3-day itineraries for any destination. By leveraging advanced data processing, the app generates detailed travel plans including local landmarks, curated accommodations, and authentic culinary highlights.
+**TripToGo** is a custom travel planner that builds 3-day itineraries for any destination. It uses generative AI to suggest local landmarks, stays, and food options based on user preferences.
 
-## 🚀 Live Demo
+## 🚀 Deployed Links
 - **Frontend**: [https://triptogo-frontend.vercel.app](https://triptogo-frontend.vercel.app)
 - **Backend**: [https://triptogo-backend-production.up.railway.app](https://triptogo-backend-production.up.railway.app)
 
----
-
-## ✨ Features
-
-### 1. 🤖 AI-Powered Itineraries
-Generates a complete 3-day travel plan including:
-- **Daily Schedule**: Morphing tradition and modernity with hourly activities.
-- **Landmark Suggestions**: Must-visit spots with descriptions and estimated costs.
-- **Accommodation Options**: Hand-picked hostel/hotel suggestions with pricing.
-- **Culinary Highlights**: Local food recommendations to experience the culture.
-
-### 2. 🔐 User Authentication
-- Secure **Sign Up** and **Sign In** functionality.
-- Real-time form validation and error handling.
-- Persistent user sessions via local storage and context management.
-
-### 3. 📊 Personal Dashboard
-- View all previously generated trips in a clean, card-based layout.
-- Quick access to detailed itineraries for past adventures.
-
-### 4. 💎 Premium UI/UX
-- **Modern Aesthetic**: Sleek Cyan-Blue-Indigo gradient design.
-- **Glassmorphism**: Elegant card layouts with backdrop blur effects.
-- **Interactive Elements**: Smooth hover animations and transitions.
-- **Responsive**: Fully optimized for Mobile, Tablet, and Desktop.
-
----
+## ✨ Core Features
+- **Smart Itineraries**: Daily schedule with landmarks, accommodation, and food.
+- **Auth**: Secure sign-up/login with JWT.
+- **Dashboard**: Track and view all your generated trips.
+- **Clean Design**: Minimalist, responsive UI built for speed.
 
 ## 🛠️ Tech Stack
-
 ### Frontend
-- **React.js** (Vite)
-- **TypeScript**
-- **Tailwind CSS**
-- **Lucide React** (Icons)
-- **Vercel** (Hosting)
+- React.js (Vite)
+- TypeScript
+- Tailwind CSS
+- Lucide Icons
 
 ### Backend
-- **Node.js**
-- **Express.js**
-- **Firebase Admin SDK** (Firestore for Database)
-- **Google Generative AI** (Gemini API)
-- **Railway** (Hosting)
+- Node.js & Express
+- MongoDB (Mongoose)
+- Google Gemini API
 
----
-
-## 🏁 Conclusion
-
-**TripToGo** demonstrates the seamless integration of AI into user-centric applications. By combining a high-performance React frontend with a robust Node.js backend and Gemini's intelligent generation, it provides a frictionless experience for travelers. The project is fully scalable, production-ready, and designed with a premium look and feel that prioritizes user engagement.
-
----
-
+## 🏁 Running Locally
+1. Clone the repo.
+2. Install dependencies in both root and `/backend` folders.
+3. Set up `.env` with `MONGODB_URI`, `JWT_SECRET`, and `GEMINI_API_KEY`.
+4. Run `npm run dev` for frontend and `node server.js` for backend.
