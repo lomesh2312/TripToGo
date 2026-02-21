@@ -58,6 +58,3 @@ Generates a complete 3-day travel plan including:
 
 ---
 
-## 👨‍💻 Developed By
-**Lomesh Sonkeshriya**
-- GitHub: [@lomesh2312](https://github.com/lomesh2312)
