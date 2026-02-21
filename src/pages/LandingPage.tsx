@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Sparkles, MapPin, Calendar, DollarSign, Users, Plane, Globe, Heart } from 'lucide-react';
+import { Sparkles, MapPin, DollarSign, Users, Plane, Globe, Heart } from 'lucide-react';
 
 export const LandingPage = () => {
   const { user } = useAuth();
