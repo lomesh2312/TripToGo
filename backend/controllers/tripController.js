@@ -1,5 +1,5 @@
 const { generateTripPlan } = require('../services/geminiService');
-const { db } = require('../config/firebase');
+const Trip = require('../models/Trip');
 
 const createTrip = async (req, res) => {
     try {
@@ -15,34 +15,20 @@ const createTrip = async (req, res) => {
         // Call Gemini API
         const tripPlan = await generateTripPlan(tripDetails);
 
-        // Save to Firebase (if db is initialized)
-        // Note: This relies on proper Firebase setup. If db is not connected, this might fail or we should skip.
-        // required to handle the case where DB might not be fully configured yet by user.
-        let tripId = 'temp-id-' + Date.now();
+        // Save to MongoDB
+        const trip = new Trip({
+            user: req.user._id, // Assuming protected route sets req.user
+            destination: tripDetails.location,
+            days: tripDetails.days,
+            budget: tripDetails.budget || 'standard',
+            travel_with: tripDetails.travelWith || 'alone',
+            trip_plan: tripPlan,
+            originalRequest: tripDetails
+        });
 
-        try {
-            if (db) {
-                const docRef = await db.collection('trips').add({
-                    user_id: tripDetails.userId || 'anonymous',
-                    destination: tripDetails.location,
-                    days: tripDetails.days,
-                    budget: tripDetails.budget,
-                    travel_with: tripDetails.travelWith || 'alone',
-                    trip_plan: tripPlan,
-                    created_at: new Date().toISOString(),
-                    originalRequest: tripDetails
-                });
-                tripId = docRef.id;
-                console.log("Trip saved to Firestore with ID:", tripId);
-            } else {
-                console.warn("Firestore not initialized, skipping save.");
-            }
-        } catch (dbError) {
-            console.error("Error saving to Firestore:", dbError);
-            // Continue to return the plan even if save fails, but maybe warn
-        }
+        const createdTrip = await trip.save();
 
-        res.status(201).json({ success: true, tripId, plan: tripPlan });
+        res.status(201).json({ success: true, tripId: createdTrip._id, plan: tripPlan });
 
     } catch (error) {
         console.error("Controller Error:", error);
@@ -53,17 +39,14 @@ const createTrip = async (req, res) => {
 const getTripById = async (req, res) => {
     try {
         const { id } = req.params;
-        if (!db) {
-            return res.status(503).json({ error: 'Database not initialized' });
-        }
+        const trip = await Trip.findById(id);
 
-        const doc = await db.collection('trips').doc(id).get();
-        if (!doc.exists) {
+        if (!trip) {
             return res.status(404).json({ error: 'Trip not found' });
         }
 
-        // Return data with ID included
-        res.json({ id: doc.id, ...doc.data() });
+        // Return data ensuring ID is properly formatted strings usually expected by frontend
+        res.json({ id: trip._id, ...trip._doc });
     } catch (error) {
         console.error("Error fetching trip:", error);
         res.status(500).json({ error: 'Failed to fetch trip' });
@@ -72,25 +55,15 @@ const getTripById = async (req, res) => {
 
 const getUserTrips = async (req, res) => {
     try {
-        const { userId } = req.params;
-        if (!db) {
-            return res.status(503).json({ error: 'Database not initialized' });
-        }
+        // Only return trips belonging to the authenticated user
+        const trips = await Trip.find({ user: req.user._id }).sort({ createdAt: -1 });
 
-        const snapshot = await db.collection('trips')
-            .where('user_id', '==', userId)
-            // .orderBy('createdAt', 'desc') // Requires index in Firestore, might fail initially
-            .get();
+        const formattedTrips = trips.map(trip => ({
+            id: trip._id,
+            ...trip._doc
+        }));
 
-        const trips = [];
-        snapshot.forEach(doc => {
-            trips.push({ id: doc.id, ...doc.data() });
-        });
-
-        // Manual sort in memory to avoid index requirement for now
-        trips.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-        res.json(trips);
+        res.json(formattedTrips);
     } catch (error) {
         console.error("Error fetching user trips:", error);
         res.status(500).json({ error: 'Failed to fetch user trips' });

@@ -23,7 +23,7 @@ app.use('/api/auth', authRoutes);
 
 // Basic Health Check
 app.get('/', (req, res) => {
-    res.send('TripToGo Backend is running!');
+    res.send('TripToGo Backend is running! (v2 MongoDB deployed)');
 });
 
 app.listen(PORT, () => {
