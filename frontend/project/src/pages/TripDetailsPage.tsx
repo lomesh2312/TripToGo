@@ -12,7 +12,7 @@ export const TripDetailsPage = () => {
   useEffect(() => {
     const fetchTrip = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/trips/${id}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/trips/${id}`);
         const data = await response.json();
 
         if (!response.ok) {
