@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Trip, LandmarkOption, HostelOption, RestaurantOption, DishOption } from '../types';
 import { MapPin, Calendar, DollarSign, Users, Clock, Utensils, Home, Backpack, Lightbulb, Loader } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export const TripDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,7 +13,7 @@ export const TripDetailsPage = () => {
   useEffect(() => {
     const fetchTrip = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/trips/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/trips/${id}`);
         const data = await response.json();
 
         if (!response.ok) {
