@@ -53,6 +53,7 @@ export const PlanTripPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           location: formData.destination,
@@ -289,8 +290,8 @@ const BudgetOption = ({ selected, onClick, title, description }: BudgetOptionPro
     type="button"
     onClick={onClick}
     className={`p-4 rounded-sm border-2 transition-all duration-200 text-left ${selected
-        ? 'border-forest-500 bg-forest-500 text-cream-100'
-        : 'border-cream-400 bg-cream-100 hover:border-forest-300 text-forest-700'
+      ? 'border-forest-500 bg-forest-500 text-cream-100'
+      : 'border-cream-400 bg-cream-100 hover:border-forest-300 text-forest-700'
       }`}
   >
     <div className={`text-sm font-semibold mb-0.5 ${selected ? 'text-cream-100' : 'text-forest-600'}`}>
@@ -314,8 +315,8 @@ const TravelOption = ({ selected, onClick, icon, title }: TravelOptionProps) => 
     type="button"
     onClick={onClick}
     className={`py-4 px-3 rounded-sm border-2 transition-all duration-200 flex flex-col items-center space-y-1.5 ${selected
-        ? 'border-forest-500 bg-forest-500 text-cream-100'
-        : 'border-cream-400 bg-cream-100 hover:border-forest-300 text-olive-600'
+      ? 'border-forest-500 bg-forest-500 text-cream-100'
+      : 'border-cream-400 bg-cream-100 hover:border-forest-300 text-olive-600'
       }`}
   >
     {icon}

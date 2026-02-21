@@ -14,7 +14,11 @@ export const TripDetailsPage = () => {
   useEffect(() => {
     const fetchTrip = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/trips/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/trips/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         const data = await response.json();
 
         if (!response.ok) {
