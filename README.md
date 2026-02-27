@@ -1,31 +1,171 @@
-# 🌍 TripToGo
+# 🌍 TripToGo – AI Powered Trip Planner
 
-**TripToGo** is a custom travel planner that builds 3-day itineraries for any destination. It uses generative AI to suggest local landmarks, stays, and food options based on user preferences.
+TripToGo is a full-stack AI-based travel planning web application that generates personalized trip itineraries using Google Gemini AI. Users can sign up, log in, plan trips based on preferences, and save their travel plans securely.
 
-## 🚀 Deployed Links
-- **Frontend**: [https://triptogo-frontend.vercel.app](https://triptogo-frontend.vercel.app)
-- **Backend**: [https://triptogo-backend-production.up.railway.app](https://triptogo-backend-production.up.railway.app)
+---
 
-## ✨ Core Features
-- **Smart Itineraries**: Daily schedule with landmarks, accommodation, and food.
-- **Auth**: Secure sign-up/login with JWT.
-- **Dashboard**: Track and view all your generated trips.
-- **Clean Design**: Minimalist, responsive UI built for speed.
+## 🚀 Live Demo
 
-## 🛠️ Tech Stack
-### Frontend
-- React.js (Vite)
+- 🌐 Frontend: https://triptogo-frontend.vercel.app  
+- 🔗 Backend API: https://triptogo-backend-production.up.railway.app
+
+---
+
+## 📌 Features
+
+### 🔐 Authentication System
+- User Signup
+- User Login
+- JWT-based Authentication
+- Protected Routes
+- Password hashing using bcrypt
+
+### 🤖 AI Trip Planner
+- Generates personalized trip itineraries
+- Uses Google Gemini AI API
+- Custom trip preferences:
+  - Destination
+  - Number of days
+  - Budget
+  - Travel companions
+
+### 🗂 Trip Management
+- Save generated trip plans
+- View trip details
+- Secure trip storage per user
+- Retrieve previous trips
+
+### 🎨 Modern UI
+- Responsive design
+- Tailwind CSS styling
+- Clean and minimal layout
+- Protected dashboard routes
+
+---
+
+## 🛠 Tech Stack
+
+### 💻 Frontend
+- React 18
 - TypeScript
+- Vite
+- React Router DOM
 - Tailwind CSS
-- Lucide Icons
+- Lucide React Icons
 
-### Backend
-- Node.js & Express
+### 🖥 Backend
+- Node.js
+- Express.js
 - MongoDB (Mongoose)
-- Google Gemini API
+- JWT Authentication
+- bcryptjs
+- Google Generative AI (Gemini API)
+- dotenv
+- CORS
 
-## 🏁 Running Locally
-1. Clone the repo.
-2. Install dependencies in both root and `/backend` folders.
-3. Set up `.env` with `MONGODB_URI`, `JWT_SECRET`, and `GEMINI_API_KEY`.
-4. Run `npm run dev` for frontend and `node server.js` for backend.
+### ☁ Deployment
+- Frontend: Vercel
+- Backend: Railway 
+- Database: MongoDB Atlas
+
+---
+
+## 📂 Project Structure
+
+```
+TripToGo/
+│
+├── frontend (React + TypeScript + Vite)
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   └── types/
+│
+├── backend (Node + Express)
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── services/
+│   └── config/
+```
+
+---
+
+## 🧑‍💻 User Input
+
+Users provide:
+
+- 📍 Destination (location)
+- 📅 Number of days
+- 💰 Budget type (low / standard / luxury)
+- 👨‍👩‍👧 Travel with (alone / friends / family / partner)
+
+---
+
+## 📤 Output
+
+- AI-generated detailed trip itinerary
+- Day-wise travel plan
+- Activities & recommendations
+- Saved trip with unique Trip ID
+- Trip details page
+
+---
+
+## 🔄 API Endpoints
+
+### 🔐 Auth Routes
+- `POST /api/auth/signup` → Register new user  
+- `POST /api/auth/login` → Login user  
+
+### ✈ Trip Routes (Protected)
+- `POST /api/trips` → Generate and save new trip  
+- `GET /api/trips/:id` → Get trip details  
+
+---
+
+## ⚙ Installation & Setup
+
+### 1️⃣ Clone Repository
+```
+git clone https://github.com/lomesh2312/TripToGo.git
+cd TripToGo
+```
+
+### 2️⃣ Setup Backend
+```
+cd backend
+npm install
+npm run dev
+```
+
+### 3️⃣ Setup Frontend
+```
+cd ..
+npm install
+npm run dev
+```
+
+---
+
+## 🔐 Security Features
+
+- JWT token-based authentication
+- Password hashing with bcrypt
+- Protected routes middleware
+- User-specific trip data access
+
+---
+
+## 📈 Future Improvements
+
+- Edit/Delete trips
+- Trip sharing feature
+- PDF itinerary export
+- Hotel & flight integration APIs
+- Map integration (Google Maps)
+- User profile management
+
+---
